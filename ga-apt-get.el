@@ -1,6 +1,6 @@
 ;;; ga-apt-get.el --- apt-get backend (Debian GNU/Linux)
 
-;; Copyright (C) 2008, 2009 William Xu
+;; Copyright (C) 2008, 2009, 2014 William Xu
 
 ;; Author: William Xu <william.xwl@gmail.com>
 
@@ -37,19 +37,22 @@
 ;; Variables
 (defvar ga-apt-get-font-lock-keywords
   `(("^Package:\\(.*\\)"
-     (1 font-lock-function-name-face nil t))
-    ("^Conflicts:"
-     (0 font-lock-warning-face nil t))
-    ("^Description:\\(.*\n\\)"
-     (1 font-lock-function-name-face nil t))
+     (1 ga-package-face nil t))
+    ("^\\(Conflicts:\\|Breaks:\\)\\(.*\\)"
+     (1 font-lock-keyword-face nil t)
+     (2 ga-warning-face nil t))
+    ("^\\(Description\\)\\(-[a-zA-Z_]+\\)?:\\(.*\\)"
+     (1 font-lock-keyword-face nil t)
+     (2 font-lock-keyword-face nil t)
+     (3 ga-description-face nil t))
     (,(concat
        "^\\("
        (regexp-opt
-	'("Package" "Priority" "Section" "Installed-Size" "Maintainer"
-	  "Architecture" "Version" "Depends" "Suggests" "Filename"
-	  "Size" "MD5sum" "Description" "Tag" "Status" "Replaces"
-	  "Conffiles" "Source" "Provides" "Pre-Depends" "Recommends"
-          "SHA1" "SHA256" "Enhances" "Config-Version" "Task"))
+        '("Package" "Priority" "Section" "Installed-Size" "Maintainer"
+          "Architecture" "Version" "Depends" "Suggests" "Filename"
+          "Size" "MD5sum" "Description-md5" "Tag"
+          "Status" "Replaces" "Source" "Provides" "Pre-Depends"
+          "Recommends" "SHA1" "SHA256" "Enhances" "Config-Version" "Task" "Homepage"))
        "\\):")
      (0 font-lock-keyword-face t t))))
 
@@ -88,7 +91,7 @@
 (defun ga-apt-get-update-available-pkgs ()
   (setq ga-available-pkgs
         (cons
-         (list 'apt-get 
+         (list 'apt-get
                (split-string
                 (ga-run-other-command-to-string "apt-cache pkgnames")))
          (remove-if (lambda (i) (eq (car i) 'apt-get))

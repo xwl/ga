@@ -1,6 +1,6 @@
 ;;; ga.el --- Generic apt alike interfaces for various package management tools
 
-;; Copyright (C) 2008, 2009, 2010, 2011 William Xu
+;; Copyright (C) 2008, 2009, 2010, 2011, 2014 William Xu
 
 ;; Author: William Xu <william.xwl@gmail.com>
 ;; Version: 0.6
@@ -122,6 +122,15 @@ symbol, second is the core command prefix string.  e.g.,
 
 
 ;;; Ga Mode
+
+(defface ga-warning-face `((t (:background "brown"))) "" :group 'faces)
+(defvar ga-warning-face 'ga-warning-face)
+
+(defface ga-description-face `((t (:background "forest green"))) "" :group 'faces)
+(defvar ga-description-face 'ga-description-face)
+
+(defface ga-package-face `((t (:background "royal blue"))) "" :group 'faces)
+(defvar ga-package-face 'ga-package-face)
 
 (defvar ga-mode-map
   (let ((map (make-sparse-keymap)))
