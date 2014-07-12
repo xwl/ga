@@ -80,7 +80,8 @@
                                 (apt-cyg "sh apt-cyg")
                                 (yum     "sudo yum")
                                 (chicken "chicken-install")
-                                (brew    "brew"))
+                                (brew    "brew")
+                                (tlmgr   "sudo tlmgr"))
   "A list of backend methods.
 Each member is consist of two elements, first is the backend
 symbol, second is the core command prefix string.  e.g.,
@@ -90,7 +91,7 @@ symbol, second is the core command prefix string.  e.g.,
   :type 'list
   :group 'ga)
 
-(defcustom ga-backend-list '(apt-get fink pkgsrc apt-cyg yum chicken brew)
+(defcustom ga-backend-list (mapcar 'car ga-backend-methods)
   "Supported backends."
   :type 'list
   :group 'ga)
@@ -126,10 +127,10 @@ symbol, second is the core command prefix string.  e.g.,
 (defface ga-warning-face `((t (:background "brown"))) "" :group 'faces)
 (defvar ga-warning-face 'ga-warning-face)
 
-(defface ga-description-face `((t (:background "forest green"))) "" :group 'faces)
+(defface ga-description-face `((t (:background "lime green"))) "" :group 'faces)
 (defvar ga-description-face 'ga-description-face)
 
-(defface ga-package-face `((t (:background "royal blue"))) "" :group 'faces)
+(defface ga-package-face `((t (:background "light sky blue"))) "" :group 'faces)
 (defvar ga-package-face 'ga-package-face)
 
 (defvar ga-mode-map
@@ -298,8 +299,9 @@ Here is a brief list of the most useful commamnds:
 (defun ga-install-at-point ()
   "Install package at point."
   (interactive)
-  (funcall (ga-find-backend-function ga-backend 'install-at-point)
-           (current-word)))
+  (let ((pkg (current-word)))
+    (funcall (ga-find-backend-function ga-backend 'install) pkg)
+    (message "Installing %s..." pkg)))
 
 (defun ga-upgrade (pkg)
   "Upgrade PKG."
@@ -328,7 +330,7 @@ Here is a brief list of the most useful commamnds:
 (defun ga-show-at-point ()
   "Run `ga show' on current word(pkg name)."
   (interactive)
-  (funcall (ga-find-backend-function ga-backend 'show-at-point)
+  (funcall (ga-find-backend-function ga-backend 'show)
            (current-word)))
 
 (defun ga-upgrade-all ()
