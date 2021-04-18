@@ -467,7 +467,8 @@ For instance, \"sudo fink\" => \"sudo\""
         (error "Ga process already exists")
       (setq ga-running t)
       (setq ga-process
-            (apply 'start-process-shell-command "ga" ga-buffer-name full-command-and-args)
+            (start-process-shell-command
+             "ga" ga-buffer-name (mapconcat 'identity full-command-and-args " "))
             ;; (apply 'start-process "ga" ga-buffer-name full-command-and-args)
             )
       (set-process-filter ga-process 'ga-process-filter)
