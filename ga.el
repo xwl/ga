@@ -1,6 +1,6 @@
 ;;; ga.el --- Generic apt alike interfaces for various package management tools
 
-;; Copyright (C) 2008, 2009, 2010, 2011, 2014 William Xu
+;; Copyright (C) 2008, 2009, 2010, 2011, 2014, 2021, 2022 William Xu
 
 ;; Author: William Xu <william.xwl@gmail.com>
 ;; Version: 0.6
