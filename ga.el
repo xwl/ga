@@ -197,33 +197,20 @@ symbol, second is the core command prefix string.  e.g.,
   (ga-help))
 
 ;;;###autoload
-(defun ga (&optional backend)
+(defun ga (&optional command)
   "Create or switch to a ga buffer."
   (interactive
    (list
-    (ido-completing-read "ga: "
-                         (mapcar (lambda (b) (symbol-name b))
-                                 (mapcar 'car ga-backend-methods)))))
+    (ido-completing-read "ga: " (mapcar #'cadr ga-backend-methods))))
   ;; Wrap around them so that even when current buffer is another
   ;; ga buffer, we won't mess with its local variables.
   (with-temp-buffer
-    (let ((ga-buffer-name (format "*Ga/%s*" backend))
-          (ga-backend (intern backend))
-          (ga-method (ga-lookup-method (intern backend))))
+    (let ((ga-buffer-name (format "*Ga/%s*" command))
+          (ga-backend (car (find-if (lambda (method) (equal (cadr method) command)) ga-backend-methods)))
+          (ga-method command))
       (switch-to-buffer ga-buffer-name)
       (unless (eq major-mode 'ga-mode)
         (ga-mode)))))
-
-(defun ga-lookup-method (backend)
-  (let ((methods ga-backend-methods)
-        m ret)
-    (while methods
-      (setq m (car methods)
-            methods (cdr methods))
-      (when (eq backend (car m))
-        (setq ret (cadr m)
-              methods nil)))
-    ret))
 
 
 ;;; Interfaces
